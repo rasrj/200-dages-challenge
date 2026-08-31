@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>200 dage · Reps-challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a;
+    --panel:#1b1f27;
+    --panel-2:#232833;
+    --line:#2c313d;
+    --text:#edeae2;
+    --muted:#8b93a1;
+    --accent:#f4c430;
+    --success:#3ddc84;
+    --danger:#e8637a;
+    --user-a:#5b8def;
+    --user-a-dim:#5b8def33;
+    --user-b:#f4739a;
+    --user-b-dim:#f4739a33;
+    --xmas-red:#c1443c;
+    --xmas-green:#2f8f5b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,.display{font-family:'Archivo Black',sans-serif;font-weight:400;letter-spacing:0.3px;}
+  ::selection{background:var(--accent);color:#12151a;}
+
+  .wrap{max-width:960px;margin:0 auto;padding:28px 20px 80px;}
+
+  header.top{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between;margin-bottom:22px;}
+  .hero-num{font-size:56px;line-height:0.9;font-family:'Archivo Black',sans-serif;}
+  .hero-sub{color:var(--muted);font-size:14px;margin-top:6px;}
+  .hero-sub b{color:var(--text);}
+
+  .userbar{display:flex;gap:8px;}
+  .user-btn{border:2px solid var(--line);background:var(--panel);color:var(--muted);padding:9px 16px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;}
+  .user-btn[data-active="true"]{color:#12151a;}
+  .user-btn.a[data-active="true"]{background:var(--user-a);border-color:var(--user-a);}
+  .user-btn.b[data-active="true"]{background:var(--user-b);border-color:var(--user-b);}
+
+  .stat-strip{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;}
+  .stat-card{flex:1 1 140px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .stat-card .n{font-family:'Archivo Black',sans-serif;font-size:26px;}
+  .stat-card .l{color:var(--muted);font-size:12.5px;margin-top:2px;}
+
+  .tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--line);}
+  .tab{padding:10px 4px;margin-right:22px;background:none;border:none;color:var(--muted);font-size:15px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;font-family:'Inter',sans-serif;}
+  .tab[data-active="true"]{color:var(--text);border-bottom-color:var(--accent);}
+
+  .cal-legend{display:flex;gap:16px;align-items:center;color:var(--muted);font-size:12.5px;margin-bottom:14px;flex-wrap:wrap;}
+  .legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;}
+  .cell{position:relative;aspect-ratio:1/1;background:var(--panel);border:1px solid var(--line);border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.12s;padding:2px;}
+  .cell:hover{border-color:#454c5c;transform:translateY(-1px);}
+  .cell.future{opacity:.35;cursor:not-allowed;}
+  .cell.future:hover{transform:none;border-color:var(--line);}
+  .cell.today{border-color:var(--accent);}
+  .cell.runday{border-color:var(--xmas-green);}
+  .cell .dnum{font-size:13px;font-weight:700;}
+  .cell .datestr-mini{font-size:9px;color:var(--muted);margin-top:2px;font-weight:600;}
+  .cell .target{font-size:9px;color:var(--muted);margin-top:1px;}
+  .cell .target.km-set{color:var(--xmas-green);font-weight:700;}
+  .hat{position:absolute;top:2px;left:3px;font-size:11px;}
+  .dots{position:absolute;bottom:4px;display:flex;gap:3px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:#3a4150;}
+  .dot.on-a{background:var(--user-a);}
+  .dot.on-b{background:var(--user-b);}
+  .check{position:absolute;top:2px;right:4px;font-size:10px;color:var(--success);}
+
+  .ov-section{margin-bottom:30px;}
+  .ov-section h3{font-size:15px;margin:0 0 12px;color:var(--text);text-transform:none;}
+  .bar-row{display:grid;grid-template-columns:110px 1fr 40px;gap:10px;align-items:center;margin-bottom:9px;font-size:13.5px;}
+  .bar-track{height:12px;background:var(--panel-2);border-radius:6px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;}
+  .bar-row .val{text-align:right;color:var(--muted);font-size:12px;}
+  .compare-cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+
+  @media (max-width:560px){
+    .wrap{padding:18px 12px 60px;}
+    .hero-num{font-size:42px;}
+    .hero-sub{font-size:12px;line-height:1.4;}
+    .grid{grid-template-columns:repeat(4,1fr);gap:8px;}
+    .cell{min-height:76px;border-radius:10px;padding:5px;}
+    .cell .dnum{font-size:16px;}
+    .cell .datestr-mini{font-size:10px;margin-top:3px;}
+    .cell .target{font-size:10px;margin-top:3px;}
+    .hat{font-size:14px;top:3px;left:4px;}
+    .dots{bottom:5px;gap:4px;}
+    .dot{width:7px;height:7px;}
+    .check{font-size:12px;top:3px;right:5px;}
+    .cal-legend{font-size:11.5px;gap:10px;margin-bottom:12px;}
+    .stat-card{padding:11px 12px;}
+    .stat-card .n{font-size:22px;}
+    .tabs{margin-bottom:16px;}
+  }
+
+  @media (max-width:560px){.compare-cols{grid-template-columns:1fr;}}
+  .empty-note{color:var(--muted);font-size:13.5px;padding:16px 0;}
+
+  .overlay{position:fixed;inset:0;background:rgba(10,12,15,.72);display:none;align-items:flex-end;justify-content:center;z-index:50;}
+  .overlay[data-open="true"]{display:flex;}
+  @media (min-width:640px){.overlay{align-items:center;}}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0;width:100%;max-width:460px;max-height:88vh;overflow-y:auto;padding:22px 20px 24px;}
+  @media (min-width:640px){.modal{border-radius:16px;}}
+  .modal h2{font-size:20px;margin:0 0 3px;}
+  .modal .datestr{color:var(--muted);font-size:13px;margin-bottom:16px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:600;}
+  select, input[type=number]{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);padding:9px 10px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;}
+  .exercise-row{display:grid;grid-template-columns:1fr 78px;gap:8px;margin-bottom:8px;}
+  .stepper{display:flex;align-items:center;gap:10px;}
+  .stepper button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);font-size:17px;cursor:pointer;}
+  .stepper .n{font-size:16px;font-weight:700;min-width:18px;text-align:center;}
+  .sum-line{font-size:13px;color:var(--muted);margin:4px 0 18px;}
+  .sum-line b{color:var(--text);}
+  .sum-line.ok b{color:var(--success);}
+  .run-person-row{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;font-size:14px;}
+  .run-person-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--xmas-green);}
+  .modal-actions{display:flex;gap:10px;}
+  .btn{flex:1;padding:11px;border-radius:9px;border:none;font-weight:700;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;}
+  .btn.primary{background:var(--accent);color:#12151a;}
+  .btn.ghost{background:var(--panel-2);color:var(--muted);border:1px solid var(--line);}
+  .btn.danger-link{background:none;color:var(--danger);border:none;font-size:12.5px;padding:0;margin-top:14px;cursor:pointer;text-decoration:underline;}
+  .close-x{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;}
+  .modal-head{position:relative;}
+  .save-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--success);color:#12151a;padding:10px 18px;border-radius:20px;font-weight:700;font-size:13.5px;opacity:0;transition:.25s;z-index:60;pointer-events:none;}
+  .save-toast[data-show="true"]{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <div class="hero-num" id="heroNum">DAG –</div>
+      <div class="hero-sub">200-dages reps-challenge · start <b>lørdag d. 29/8 2026</b> · 🎅 <b>1.–24. december = løbe-julekalender</b></div>
+    </div>
+    <div class="userbar">
+      <button class="user-btn a" id="btnUserA" data-active="false">Rasmus</button>
+      <button class="user-btn b" id="btnUserB" data-active="false">Katrine</button>
+    </div>
+  </header>
+
+  <div class="stat-strip" id="statStrip"></div>
+
+  <div class="tabs">
+    <button class="tab" id="tabCal" data-active="true">Kalender</button>
+    <button class="tab" id="tabOv" data-active="false">Oversigt</button>
+  </div>
+
+  <section id="viewCal">
+    <div class="cal-legend">
+      <span><span class="legend-dot" style="background:var(--user-a)"></span>Rasmus udført</span>
+      <span><span class="legend-dot" style="background:var(--user-b)"></span>Katrine udført</span>
+      <span><span class="legend-dot" style="background:#3a4150"></span>Ikke udført endnu</span>
+      <span>🎅 = december / løbe-julekalender · Rasmus 1–24 km · Katrine 0,5–12 km</span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="viewOv" style="display:none;">
+    <div class="compare-cols">
+      <div>
+        <h3 style="color:var(--user-a)">Rasmus</h3>
+        <div id="ovA"></div>
+      </div>
+      <div>
+        <h3 style="color:var(--user-b)">Katrine</h3>
+        <div id="ovB"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="mTitle">Dag –</h2>
+      <button class="close-x" id="mClose">✕</button>
+    </div>
+    <div class="datestr" id="mDate"></div>
+
+    <div id="normalFields">
+      <div class="field">
+        <label>Antal forskellige øvelser i dag</label>
+        <div class="stepper">
+          <button id="stepMinus" type="button">−</button>
+          <span class="n" id="stepVal">1</span>
+          <button id="stepPlus" type="button">+</button>
+        </div>
+      </div>
+      <div id="exerciseFields"></div>
+      <div class="sum-line" id="sumLine"></div>
+    </div>
+
+    <div id="runFields" style="display:none;">
+      <div class="field">
+        <label>Dagens distance · én ubrugt distance fra 1–24 km</label>
+        <select id="runKmSelect"></select>
+      </div>
+      <div id="runPersonRows"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn ghost" id="mCancel">Annuller</button>
+      <button class="btn primary" id="mSave">Gem &amp; markér udført</button>
+    </div>
+    <button class="btn danger-link" id="mClear" style="display:none;">Ryd registrering for denne dag</button>
+  </div>
+</div>
+
+<div class="save-toast" id="toast">Gemt ✓</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://pnqufghqxohoanxcrnlc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_duSDA507hhuf852mBSfE8A_eznw2Q8_";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+const EXERCISES = [
+  {id:'pushup', label:'Push-ups', group:'Bryst & triceps'},
+  {id:'situp', label:'Sit-ups', group:'Mave'},
+  {id:'squat', label:'Squats', group:'Ben & baller'},
+  {id:'lunges', label:'Lunges', group:'Ben & baller'},
+  {id:'pullup', label:'Pull-ups', group:'Ryg & biceps'},
+  {id:'boxjump', label:'Box jumps', group:'Ben & kondition'},
+];
+const EX_MAP = Object.fromEntries(EXERCISES.map(e=>[e.id,e]));
+const USERS = {a:{key:'rasmus', name:'Rasmus', color:'var(--user-a)'}, b:{key:'katrine', name:'Katrine', color:'var(--user-b)'}};
+const TOTAL_DAYS = 200;
+const START = new Date(2026,7,29); // 29. august 2026
+START.setHours(0,0,0,0);
+
+let currentUser = 'a';
+let openDay = null;
+let openDayIsRun = false;
+let numEx = 1;
+let entries = {};   // rep-challenge entries: entries['rasmus'][day] = {...}
+let runEntries = {}; // shared julekalender entries: runEntries[day] = {km, doneRasmus, doneKatrine}
+
+function dateForDay(d){
+  const dt = new Date(START);
+  dt.setDate(dt.getDate() + (d-1));
+  return dt;
+}
+function fmtDate(dt){
+  return dt.toLocaleDateString('da-DK', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+}
+function fmtDateMini(dt){
+  const months = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+  return `${dt.getDate()}. ${months[dt.getMonth()]}`;
+}
+function todayDayIndex(){
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  const start = new Date(2026,7,29);
+  start.setHours(0,0,0,0);
+  return Math.floor((now.getTime() - start.getTime()) / 86400000) + 1;
+}
+function isDecemberDay(d){
+  const dt = dateForDay(d);
+  return dt.getMonth()===11;
+}
+function isRunDay(d){
+  const dt = dateForDay(d);
+  return dt.getMonth()===11 && dt.getDate()>=1 && dt.getDate()<=24;
+}
+
+async function loadUserEntries(userKey){
+  if(entries[userKey]) return entries[userKey];
+  const map = {};
+  try{
+    const {data, error} = await supabaseClient
+      .from('challenge_entries')
+      .select('*')
+      .eq('person', userKey)
+      .eq('kind', 'rep');
+    if(error) throw error;
+    for(const row of (data || [])) map[row.day] = row.data;
+  }catch(e){ console.error('Kunne ikke hente registreringer fra Supabase', e); }
+  entries[userKey] = map;
+  return map;
+}
+
+async function loadRunEntries(){
+  const map = {};
+  try{
+    const {data, error} = await supabaseClient
+      .from('challenge_entries')
+      .select('*')
+      .eq('kind', 'run');
+    if(error) throw error;
+    for(const row of (data || [])) map[row.day] = row.data;
+  }catch(e){ console.error('Kunne ikke hente julekalender fra Supabase', e); }
+  runEntries = map;
+  return map;
+}
+
+async function saveEntry(userKey, day, data){
+  try{
+    const {error} = await supabaseClient
+      .from('challenge_entries')
+      .upsert({
+        id: `rep:${userKey}:${day}`,
+        kind: 'rep',
+        person: userKey,
+        day: day,
+        data: data
+      }, {onConflict:'id'});
+    if(error) throw error;
+    entries[userKey] = entries[userKey] || {};
+    entries[userKey][day] = data;
+    return true;
+  }catch(e){ console.error('Kunne ikke gemme', e); return false; }
+}
+
+async function deleteEntry(userKey, day){
+  try{
+    const {error} = await supabaseClient
+      .from('challenge_entries')
+      .delete()
+      .eq('id', `rep:${userKey}:${day}`);
+    if(error) throw error;
+    if(entries[userKey]) delete entries[userKey][day];
+    return true;
+  }catch(e){ console.error('Kunne ikke slette', e); return false; }
+}
+
+async function saveRunEntry(day, data){
+  try{
+    const {error} = await supabaseClient
+      .from('challenge_entries')
+      .upsert({
+        id: `run:${day}`,
+        kind: 'run',
+        person: 'shared',
+        day: day,
+        data: data
+      }, {onConflict:'id'});
+    if(error) throw error;
+    runEntries[day] = data;
+    return true;
+  }catch(e){ console.error('Kunne ikke gemme løbedag', e); return false; }
+}
+
+async function deleteRunEntry(day){
+  try{
+    const {error} = await supabaseClient
+      .from('challenge_entries')
+      .delete()
+      .eq('id', `run:${day}`);
+    if(error) throw error;
+    delete runEntries[day];
+    return true;
+  }catch(e){ console.error('Kunne ikke slette løbedag', e); return false; }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.dataset.show = 'true';
+  setTimeout(()=>{ t.dataset.show='false'; }, 1600);
+}
+
+async function renderAll(){
+  const today = todayDayIndex();
+  document.getElementById('heroNum').textContent = today>=1 && today<=TOTAL_DAYS ? `DAG ${today} AF ${TOTAL_DAYS}` : (today<1 ? 'STARTER SNART' : 'CHALLENGE FÆRDIG');
+  await Promise.all([loadUserEntries('rasmus'), loadUserEntries('katrine'), loadRunEntries()]);
+  renderStats();
+  renderGrid();
+  renderOverview();
+}
+
+function computeStreak(map, today){
+  let streak = 0;
+  for(let d = Math.min(today-1, TOTAL_DAYS); d>=1; d--){
+    const done = isRunDay(d) ? (runEntries[d] && (USERS.a ? true : true)) : (map[d] && map[d].completed);
+    if(done) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function renderStats(){
+  const today = todayDayIndex();
+  const mapA = entries['rasmus'] || {};
+  const mapB = entries['katrine'] || {};
+  const doneA = Object.values(mapA).filter(e=>e.completed).length + Object.values(runEntries).filter(e=>e.doneRasmus).length;
+  const doneB = Object.values(mapB).filter(e=>e.completed).length + Object.values(runEntries).filter(e=>e.doneKatrine).length;
+  const strip = document.getElementById('statStrip');
+  strip.innerHTML = `
+    <div class="stat-card"><div class="n" style="color:var(--user-a)">${doneA}/${TOTAL_DAYS}</div><div class="l">Rasmus gennemført</div></div>
+    <div class="stat-card"><div class="n" style="color:var(--user-b)">${doneB}/${TOTAL_DAYS}</div><div class="l">Katrine gennemført</div></div>
+  `;
+}
+
+function renderGrid(){
+  const today = todayDayIndex();
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const mapA = entries['rasmus'] || {};
+  const mapB = entries['katrine'] || {};
+  for(let d=1; d<=TOTAL_DAYS; d++){
+    const dt = dateForDay(d);
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const isFuture = d > today;
+    if(isFuture) cell.classList.add('future');
+    if(d === today) cell.classList.add('today');
+    const runDay = isRunDay(d);
+    if(runDay) cell.classList.add('runday');
+
+    if(isDecemberDay(d)) cell.innerHTML += `<span class="hat">🎅</span>`;
+
+    let doneA, doneB;
+    if(runDay){
+      const re = runEntries[d];
+      doneA = !!(re && re.doneRasmus);
+      doneB = !!(re && re.doneKatrine);
+      if((currentUser==='a' ? doneA : doneB)) cell.innerHTML += `<span class="check">✓</span>`;
+      cell.innerHTML += `<span class="dnum">${d}</span><span class="datestr-mini">${fmtDateMini(dt)}</span>`;
+      cell.innerHTML += re && re.km ? `<span class="target km-set">${re.km} km</span>` : `<span class="target">vælg km</span>`;
+    } else {
+      doneA = !!(mapA[d] && mapA[d].completed);
+      doneB = !!(mapB[d] && mapB[d].completed);
+      if((currentUser==='a' ? doneA : doneB)) cell.innerHTML += `<span class="check">✓</span>`;
+      cell.innerHTML += `<span class="dnum">${d}</span><span class="datestr-mini">${fmtDateMini(dt)}</span>`;
+      cell.innerHTML += `<span class="target">${d} reps</span>`;
+    }
+    cell.innerHTML += `<span class="dots"><span class="dot ${doneA?'on-a':''}"></span><span class="dot ${doneB?'on-b':''}"></span></span>`;
+
+    if(!isFuture){
+      cell.addEventListener('click', ()=>openModal(d));
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function groupTotals(map){
+  const exTotals = {}; const grTotals = {};
+  for(const day in map){
+    const entry = map[day];
+    if(!entry || !entry.exercises) continue;
+    for(const item of entry.exercises){
+      const ex = EX_MAP[item.ex];
+      if(!ex) continue;
+      exTotals[item.ex] = (exTotals[item.ex]||0) + (item.reps||0);
+      grTotals[ex.group] = (grTotals[ex.group]||0) + (item.reps||0);
+    }
+  }
+  return {exTotals, grTotals};
+}
+
+function renderBars(container, totals, colorVar, labelMap){
+  const entriesArr = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  if(entriesArr.length===0){
+    container.innerHTML += `<div class="empty-note">Ingen registreringer endnu.</div>`;
+    return;
+  }
+  const max = entriesArr[0][1];
+  for(const [key, val] of entriesArr){
+    const label = labelMap ? (labelMap[key]||key) : key;
+    const pct = Math.max(4, Math.round((val/max)*100));
+    container.innerHTML += `
+      <div class="bar-row">
+        <div>${label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colorVar}"></div></div>
+        <div class="val">${val}</div>
+      </div>`;
+  }
+}
+
+function renderOverview(){
+  const mapA = entries['rasmus'] || {};
+  const mapB = entries['katrine'] || {};
+  const {exTotals: exA, grTotals: grA} = groupTotals(mapA);
+  const {exTotals: exB, grTotals: grB} = groupTotals(mapB);
+  const exLabels = Object.fromEntries(EXERCISES.map(e=>[e.id, e.label]));
+
+  const kmRasmus = Object.values(runEntries).filter(e=>e.doneRasmus).reduce((s,e)=>s+(e.km||0),0);
+  const kmKatrine = Object.values(runEntries).filter(e=>e.doneKatrine).reduce((s,e)=>s+((e.km||0)/2),0);
+
+  const ovA = document.getElementById('ovA');
+  const ovB = document.getElementById('ovB');
+  ovA.innerHTML = `
+    <div class="ov-section"><h3>Øvelser (reps i alt)</h3><div id="ovAex"></div></div>
+    <div class="ov-section"><h3>Muskelgrupper</h3><div id="ovAgr"></div></div>
+    <div class="ov-section"><h3>🎅 Løb i december</h3><div class="empty-note" style="padding:0;color:var(--text);font-size:14px;">${kmRasmus} km i alt</div></div>`;
+  ovB.innerHTML = `
+    <div class="ov-section"><h3>Øvelser (reps i alt)</h3><div id="ovBex"></div></div>
+    <div class="ov-section"><h3>Muskelgrupper</h3><div id="ovBgr"></div></div>
+    <div class="ov-section"><h3>🎅 Løb i december</h3><div class="empty-note" style="padding:0;color:var(--text);font-size:14px;">${kmKatrine} km i alt</div></div>`;
+  renderBars(document.getElementById('ovAex'), exA, 'var(--user-a)', exLabels);
+  renderBars(document.getElementById('ovAgr'), grA, 'var(--user-a)');
+  renderBars(document.getElementById('ovBex'), exB, 'var(--user-b)', exLabels);
+  renderBars(document.getElementById('ovBgr'), grB, 'var(--user-b)');
+}
+
+// ---- modal: normal rep day ----
+function openModal(day){
+  openDay = day;
+  openDayIsRun = isRunDay(day);
+  document.getElementById('mDate').textContent = fmtDate(dateForDay(day)) + (openDayIsRun ? ' · julekalender' : ` · registreres for ${USERS[currentUser].name}`);
+  document.getElementById('normalFields').style.display = openDayIsRun ? 'none' : 'block';
+  document.getElementById('runFields').style.display = openDayIsRun ? 'block' : 'none';
+
+  if(openDayIsRun){
+    document.getElementById('mTitle').textContent = `Dag ${day} · 🎅 Julekalender`;
+    document.getElementById('mClear').style.display = runEntries[day] ? 'block' : 'none';
+    renderRunFields(day);
+  } else {
+    const key = currentUser==='a' ? 'rasmus' : 'katrine';
+    const existing = (entries[key] || {})[day];
+    numEx = existing?.exercises?.length || 1;
+    document.getElementById('mTitle').textContent = `Dag ${day} · ${day} reps`;
+    document.getElementById('stepVal').textContent = numEx;
+    document.getElementById('mClear').style.display = existing ? 'block' : 'none';
+    renderExerciseFields(existing);
+  }
+  document.getElementById('overlay').dataset.open = 'true';
+}
+function closeModal(){
+  document.getElementById('overlay').dataset.open = 'false';
+  openDay = null;
+}
+function evenSplit(total, n){
+  const base = Math.floor(total/n); const rem = total % n;
+  return Array.from({length:n}, (_,i)=> base + (i<rem?1:0));
+}
+function renderExerciseFields(existing){
+  const day = openDay;
+  const container = document.getElementById('exerciseFields');
+  container.innerHTML = '';
+  const splits = evenSplit(day, numEx);
+  for(let i=0;i<numEx;i++){
+    const prev = existing?.exercises?.[i];
+    const row = document.createElement('div');
+    row.className = 'exercise-row';
+    const sel = document.createElement('select');
+    sel.dataset.idx = i;
+    sel.className = 'ex-select';
+    for(const ex of EXERCISES){
+      const opt = document.createElement('option');
+      opt.value = ex.id; opt.textContent = ex.label;
+      sel.appendChild(opt);
+    }
+    if(prev) sel.value = prev.ex;
+    const repsInput = document.createElement('input');
+    repsInput.type = 'number'; repsInput.min = '0'; repsInput.className = 'ex-reps';
+    repsInput.value = prev ? prev.reps : splits[i];
+    repsInput.dataset.idx = i;
+    row.appendChild(sel);
+    row.appendChild(repsInput);
+    container.appendChild(row);
+    sel.addEventListener('change', updateSumLine);
+    repsInput.addEventListener('input', updateSumLine);
+  }
+  const lbl = document.createElement('label');
+  lbl.textContent = 'Øvelse & reps pr. øvelse';
+  container.insertBefore(lbl, container.firstChild);
+  updateSumLine();
+}
+function updateSumLine(){
+  const reps = [...document.querySelectorAll('.ex-reps')].map(i=>parseInt(i.value,10)||0);
+  const sum = reps.reduce((a,b)=>a+b,0);
+  const target = openDay;
+  const line = document.getElementById('sumLine');
+  line.innerHTML = `I alt registreret: <b>${sum}</b> reps · mål for dagen: <b>${target}</b> reps`;
+  line.className = 'sum-line' + (sum>=target ? ' ok' : '');
+}
+
+// ---- modal: december run day ----
+function usedKmExcluding(day){
+  const used = new Set();
+  for(const d in runEntries){
+    if(parseInt(d,10)===day) continue;
+    if(runEntries[d] && runEntries[d].km) used.add(runEntries[d].km);
+  }
+  return used;
+}
+function renderRunFields(day){
+  const existing = runEntries[day];
+  const used = usedKmExcluding(day);
+  const select = document.getElementById('runKmSelect');
+  select.innerHTML = '';
+  for(let n=1;n<=24;n++){
+    if(used.has(n)) continue;
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = `${n} km`;
+    select.appendChild(opt);
+  }
+  if(existing && existing.km) select.value = existing.km;
+  select.addEventListener('change', ()=>renderRunPersonRows(existing));
+  renderRunPersonRows(existing);
+}
+function renderRunPersonRows(existing){
+  const km = parseInt(document.getElementById('runKmSelect').value,10) || 1;
+  const half = km/2;
+  const container = document.getElementById('runPersonRows');
+  container.innerHTML = `
+    <label class="run-person-row"><input type="checkbox" id="runDoneA" ${existing?.doneRasmus ? 'checked':''}> Rasmus løber <b>${km} km</b></label>
+    <label class="run-person-row"><input type="checkbox" id="runDoneB" ${existing?.doneKatrine ? 'checked':''}> Katrine løber <b>${half} km</b></label>
+  `;
+}
+
+document.getElementById('stepMinus').addEventListener('click', ()=>{
+  if(numEx>1){ numEx--; document.getElementById('stepVal').textContent=numEx; renderExerciseFields(null); }
+});
+document.getElementById('stepPlus').addEventListener('click', ()=>{
+  if(numEx<6){ numEx++; document.getElementById('stepVal').textContent=numEx; renderExerciseFields(null); }
+});
+document.getElementById('mClose').addEventListener('click', closeModal);
+document.getElementById('mCancel').addEventListener('click', closeModal);
+document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeModal(); });
+
+document.getElementById('mSave').addEventListener('click', async ()=>{
+  const day = openDay;
+  if(openDayIsRun){
+    const km = parseInt(document.getElementById('runKmSelect').value,10);
+    const doneRasmus = document.getElementById('runDoneA').checked;
+    const doneKatrine = document.getElementById('runDoneB').checked;
+
+    if(!doneRasmus || !doneKatrine){
+      showToast('Begge skal markeres som løbet');
+      return;
+    }
+
+    const data = {km, doneRasmus, doneKatrine, savedAt: new Date().toISOString()};
+    const ok = await saveRunEntry(day, data);
+    if(ok){ showToast('Gemt ✓'); closeModal(); renderStats(); renderGrid(); renderOverview(); }
+    else{ showToast('Kunne ikke gemme – prøv igen'); }
+  } else {
+    const selects = [...document.querySelectorAll('.ex-select')];
+    const reps = [...document.querySelectorAll('.ex-reps')];
+    const exercises = selects.map((s,i)=>({ex: s.value, reps: parseInt(reps[i].value,10)||0}));
+    const key = currentUser==='a' ? 'rasmus' : 'katrine';
+    const data = {exercises, completed:true, savedAt: new Date().toISOString()};
+    const ok = await saveEntry(key, day, data);
+    if(ok){ showToast('Gemt ✓'); closeModal(); renderStats(); renderGrid(); renderOverview(); }
+    else{ showToast('Kunne ikke gemme – prøv igen'); }
+  }
+});
+document.getElementById('mClear').addEventListener('click', async ()=>{
+  const day = openDay;
+  if(openDayIsRun){
+    const ok = await deleteRunEntry(day);
+    if(ok){ showToast('Løbedag ryddet'); closeModal(); renderStats(); renderGrid(); renderOverview(); }
+  } else {
+    const key = currentUser==='a' ? 'rasmus' : 'katrine';
+    const ok = await deleteEntry(key, day);
+    if(ok){ showToast('Registrering ryddet'); closeModal(); renderStats(); renderGrid(); renderOverview(); }
+  }
+});
+
+// ---- user switch & tabs ----
+function setUser(u){
+  currentUser = u;
+  document.getElementById('btnUserA').dataset.active = (u==='a');
+  document.getElementById('btnUserB').dataset.active = (u==='b');
+  renderStats(); renderGrid();
+  try{ localStorage.setItem('last-user', u); }catch(e){}
+}
+document.getElementById('btnUserA').addEventListener('click', ()=>setUser('a'));
+document.getElementById('btnUserB').addEventListener('click', ()=>setUser('b'));
+
+document.getElementById('tabCal').addEventListener('click', ()=>{
+  document.getElementById('tabCal').dataset.active='true';
+  document.getElementById('tabOv').dataset.active='false';
+  document.getElementById('viewCal').style.display='block';
+  document.getElementById('viewOv').style.display='none';
+});
+document.getElementById('tabOv').addEventListener('click', ()=>{
+  document.getElementById('tabCal').dataset.active='false';
+  document.getElementById('tabOv').dataset.active='true';
+  document.getElementById('viewCal').style.display='none';
+  document.getElementById('viewOv').style.display='block';
+  renderOverview();
+});
+
+(async function init(){
+  let last = 'a';
+  try{
+    const res = localStorage.getItem('last-user');
+    if(res) last = res;
+  }catch(e){ /* first run, no saved user yet */ }
+  setUser(last);
+  await renderAll();
+})();
+</script>
+</body>
+</html>
