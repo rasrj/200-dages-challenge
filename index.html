@@ -85,7 +85,7 @@
   }
   .daily-message .dm-visual.dm-image-2 .dm-today,
   .daily-message .dm-visual.dm-image-2 .dm-quote-wrap{
-    left:55%;right:auto;top:47%;width:25%;
+    left:55%;right:auto;top:44%;width:25%;
   }
   .daily-message .dm-visual.dm-image-2 .dm-today-number{font-size:58px;}
   .daily-message .dm-visual.dm-image-2 .dm-today-label,
@@ -103,7 +103,7 @@
     .daily-message .dm-quote{font-size:13px;}
     .daily-message .dm-visual.dm-image-2 .dm-today,
     .daily-message .dm-visual.dm-image-2 .dm-quote-wrap{
-      left:55%;right:auto;top:47%;width:25%;
+      left:55%;right:auto;top:44%;width:25%;
     }
     .daily-message .dm-visual.dm-image-2 .dm-today-number{font-size:46px;}
 
@@ -586,7 +586,7 @@ function launchConfetti(){
     const el=document.createElement('div');
     el.className='confetti-piece';
     el.style.left=`${Math.random()*100}vw`;
-    el.style.setProperty('-dx',`${(Math.random()-.5)*260}px`);
+    el.style.setProperty('dx',`${(Math.random()-.5)*260}px`);
     el.style.background=['#f4c430','#3ddc84','#5b8def','#f4739a','#c1443c'][Math.floor(Math.random()*5)];
     el.style.animationDelay=`${Math.random()*.35}s`;
     document.body.appendChild(el);
