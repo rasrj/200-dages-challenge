@@ -53,7 +53,7 @@
   .daily-message .dm-icon{font-size:22px;flex:0 0 auto;}
   .daily-message .dm-title{font-weight:800;font-size:14px;}
   .daily-message .dm-sub{color:var(--muted);font-size:12px;margin-top:2px;}
-  .daily-message .dm-arrow{margin-left:auto;color:var(--muted);font-size:16px;transition:.2s;}
+  .daily-message .dm-arrow{margin-left:auto;color:var(--muted);font-size:13px;transition:.2s;}
   .daily-message.unlocked button{background:rgba(61,220,132,.07);}
   .daily-message.unlocked .dm-arrow{transform:rotate(90deg);color:var(--success);}
   .daily-message .dm-content{display:none;}
@@ -64,7 +64,7 @@
   .daily-message .dm-today-label{font-size:12px;letter-spacing:2.8px;font-weight:800;text-transform:uppercase;margin-bottom:2px;text-shadow:0 1px 4px rgba(255,255,255,.35);}
   .daily-message .dm-today-number{font-family:'Archivo Black',sans-serif;font-size:76px;line-height:.95;text-shadow:0 2px 5px rgba(255,255,255,.35);}
   .daily-message .dm-quote-wrap{position:absolute;z-index:3;top:22px;left:18px;right:18px;height:auto;display:flex;align-items:flex-start;justify-content:center;padding:8px 14px;text-align:center;opacity:0;animation:dmQuote 1.5s ease 1.8s forwards;}
-  .daily-message .dm-quote{font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.35;font-weight:500;margin:0 0 8px;color:#12151a;text-shadow:0 1px 5px rgba(255,255,255,.45);}
+  .daily-message .dm-quote{font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.35;font-weight:500;margin:0 0 8px;color:#12151a;text-shadow:0 1px 5px rgba(255,255,255,.45);}
   .daily-message .dm-author{color:#303238;font-size:13px;font-weight:600;}
   @keyframes dmNumber{
     0%{opacity:0;transform:scale(.94)}
@@ -85,7 +85,7 @@
   }
   .daily-message .dm-visual.dm-image-2 .dm-today,
   .daily-message .dm-visual.dm-image-2 .dm-quote-wrap{
-    left:55%;right:auto;top:50%;width:25%;
+    left:55%;right:auto;top:47%;width:25%;
   }
   .daily-message .dm-visual.dm-image-2 .dm-today-number{font-size:58px;}
   .daily-message .dm-visual.dm-image-2 .dm-today-label,
@@ -100,10 +100,10 @@
     .daily-message .dm-today{top:24px;}
     .daily-message .dm-quote-wrap{top:18px;padding:8px 6px;}
     .daily-message .dm-today-number{font-size:64px;}
-    .daily-message .dm-quote{font-size:16px;}
+    .daily-message .dm-quote{font-size:13px;}
     .daily-message .dm-visual.dm-image-2 .dm-today,
     .daily-message .dm-visual.dm-image-2 .dm-quote-wrap{
-      left:55%;right:auto;top:50%;width:25%;
+      left:55%;right:auto;top:47%;width:25%;
     }
     .daily-message .dm-visual.dm-image-2 .dm-today-number{font-size:46px;}
 
@@ -145,7 +145,7 @@
   .milestone-overlay[data-open="true"]{display:flex;}
   .milestone-card{background:var(--panel);border:1px solid var(--success);box-shadow:0 20px 70px rgba(0,0,0,.45);border-radius:18px;padding:28px 24px;text-align:center;width:min(88vw,390px);}
   .milestone-card .emoji{font-size:48px;line-height:1;margin-bottom:8px;}
-  .milestone-card h2{font-size:16px;margin:0 0 6px;}
+  .milestone-card h2{font-size:13px;margin:0 0 6px;}
   .milestone-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.45;}
   .confetti-piece{position:fixed;top:-12px;width:8px;height:14px;z-index:120;pointer-events:none;animation:confetti-fall 1.8s ease-out forwards;}
   @keyframes confetti-fall{0%{transform:translate3d(0,0,0) rotate(0deg);opacity:1}100%{transform:translate3d(var(--dx),105vh,0) rotate(720deg);opacity:0}}
@@ -174,7 +174,7 @@
     .hero-sub{font-size:12px;line-height:1.4;}
     .grid{grid-template-columns:repeat(4,1fr);gap:7px;}
     .cell{min-height:78px;border-radius:10px;padding:4px;}
-    .cell .dnum{font-size:16px;}
+    .cell .dnum{font-size:13px;}
     .cell .datestr-mini{font-size:10px;margin-top:2px;}
     .cell .target{font-size:10px;margin-top:3px;}
     .hat{font-size:14px;top:3px;left:4px;}
@@ -203,7 +203,7 @@
   .exercise-row{display:grid;grid-template-columns:1fr 78px;gap:8px;margin-bottom:8px;}
   .stepper{display:flex;align-items:center;gap:10px;}
   .stepper button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);font-size:17px;cursor:pointer;}
-  .stepper .n{font-size:16px;font-weight:700;min-width:18px;text-align:center;}
+  .stepper .n{font-size:13px;font-weight:700;min-width:18px;text-align:center;}
   .sum-line{font-size:13px;color:var(--muted);margin:4px 0 18px;}
   .sum-line b{color:var(--text);}
   .sum-line.ok b{color:var(--success);}
@@ -240,7 +240,7 @@
     <button type="button" id="dailyMessageBtn" aria-expanded="false">
       <span class="dm-icon" id="dailyMessageIcon">🔒</span>
       <span>
-        <div class="dm-title">Dagens besked</div>
+        <div class="dm-title"></div>
         <div class="dm-sub" id="dailyMessageSub">Gennemfør dagens træning for at låse op</div>
       </span>
       <span class="dm-arrow" id="dailyMessageArrow">›</span>
@@ -586,7 +586,7 @@ function launchConfetti(){
     const el=document.createElement('div');
     el.className='confetti-piece';
     el.style.left=`${Math.random()*100}vw`;
-    el.style.setProperty('--dx',`${(Math.random()-.5)*260}px`);
+    el.style.setProperty('-dx',`${(Math.random()-.5)*260}px`);
     el.style.background=['#f4c430','#3ddc84','#5b8def','#f4739a','#c1443c'][Math.floor(Math.random()*5)];
     el.style.animationDelay=`${Math.random()*.35}s`;
     document.body.appendChild(el);
@@ -662,18 +662,18 @@ const DAILY_MESSAGES = [
 ];
 
 const KATRINE_MESSAGES = [
-  {text:'Katrine, du gør det virkelig godt. Bliv ved.', author:'Dagens besked'},
-  {text:'Katrine, én dag mere — du er godt på vej.', author:'Dagens besked'},
-  {text:'Katrine, du er stærkere, end du tror.', author:'Dagens besked'},
-  {text:'Katrine, stærkt gået. Det her bliver kun bedre.', author:'Dagens besked'},
-  {text:'Katrine, du kan godt være stolt af den indsats.', author:'Dagens besked'},
-  {text:'Katrine, du møder op — og det er det vigtigste.', author:'Dagens besked'},
-  {text:'Katrine, du holder fast. Det er stærkt.', author:'Dagens besked'},
-  {text:'Katrine, du er godt i gang. Fortsæt sådan.', author:'Dagens besked'},
-  {text:'Katrine, dagens træning er klaret. Flot arbejde.', author:'Dagens besked'},
-  {text:'Katrine, du bliver stærkere for hver dag.', author:'Dagens besked'},
-  {text:'Katrine, du behøver ikke være perfekt — bare blive ved.', author:'Dagens besked'},
-  {text:'Katrine, endnu en dag i banken. Godt gået.', author:'Dagens besked'},
+  {text:'Katrine, du gør det virkelig godt. Bliv ved.', author:''},
+  {text:'Katrine, én dag mere — du er godt på vej.', author:''},
+  {text:'Katrine, du er stærkere, end du tror.', author:''},
+  {text:'Katrine, stærkt gået. Det her bliver kun bedre.', author:''},
+  {text:'Katrine, du kan godt være stolt af den indsats.', author:''},
+  {text:'Katrine, du møder op — og det er det vigtigste.', author:''},
+  {text:'Katrine, du holder fast. Det er stærkt.', author:''},
+  {text:'Katrine, du er godt i gang. Fortsæt sådan.', author:''},
+  {text:'Katrine, dagens træning er klaret. Flot arbejde.', author:''},
+  {text:'Katrine, du bliver stærkere for hver dag.', author:''},
+  {text:'Katrine, du behøver ikke være perfekt — bare blive ved.', author:''},
+  {text:'Katrine, endnu en dag i banken. Godt gået.', author:''},
 ];
 
 function todayCompletedForUser(day){
@@ -726,7 +726,7 @@ function renderDailyMessage(){
 
   if(today < 1 || today > TOTAL_DAYS){
     icon.textContent = '💬';
-    sub.textContent = 'Dagens besked er uden for challenge-perioden';
+    sub.textContent = ' er uden for challenge-perioden';
     arrow.textContent = '';
     btn.disabled = true;
     return;
