@@ -123,7 +123,7 @@
   .milestone-card .emoji{font-size:48px;line-height:1;margin-bottom:8px;}
   .milestone-card h2{font-size:16px;margin:0 0 6px;}
   .milestone-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.45;}
-  .confetti-piece{position:fixed;top:-12px;width:8px;height:14px;z-index:120;pointer-events:none;animation:confetti-fall 1.8s ease-out forwards;}
+  .confetti-piece{position:fixed;top:-12px;width:8px;height:14px;z-index:120;pointer-events:none;animation:confetti-fall 4s cubic-bezier(.15,.65,.3,1) forwards;}
   @keyframes confetti-fall{0%{transform:translate3d(0,0,0) rotate(0deg);opacity:1}100%{transform:translate3d(var(--dx),105vh,0) rotate(720deg);opacity:0}}
   @media(max-width:560px){.add-ex-row{grid-template-columns:1fr;}.small-btn{width:100%;}}
 
@@ -558,19 +558,20 @@ async function deleteRunEntry(day){
 
 
 function launchConfetti(){
-  for(let i=0;i<70;i++){
+  for(let i=0;i<95;i++){
     const el=document.createElement('div');
     el.className='confetti-piece';
     el.style.left=`${Math.random()*100}vw`;
     el.style.setProperty('--dx',`${(Math.random()-.5)*260}px`);
-    el.style.background=['#f4c430','#3ddc84','#5b8def','#f4739a','#c1443c'][Math.floor(Math.random()*5)];
-    el.style.animationDelay=`${Math.random()*.35}s`;
+    el.style.background=['#f4c430','#3ddc84','#5b8def','#f4739a','#c1443c','#ffffff'][Math.floor(Math.random()*6)];
+    el.style.animationDelay=`${Math.random()*1.2}s`;
     document.body.appendChild(el);
-    setTimeout(()=>el.remove(),2400);
+    setTimeout(()=>el.remove(),5200);
   }
 }
 function celebrateMilestone(day,userName){
   const messages={
+    6:`6 dage! ${userName}, stærkt gået — I er godt i gang 💪`,
     10:`10 dage i hus, ${userName}! I er kommet rigtig godt fra start 💪`,
     20:`20 dage! ${userName}, nu er det ved at blive en vane 🔥`,
     30:`30 dage gennemført! ${userName}, stærkt arbejde 🚀`,
@@ -780,7 +781,7 @@ function renderGrid(){
     const runDay = isRunDay(d);
     if(runDay) cell.classList.add('runday');
 
-    if(isDecemberDay(d)) cell.innerHTML += `<span class="hat">🎅</span>`;
+    if(isRunDay(d)) cell.innerHTML += `<span class="hat">🎅</span>`;
 
     let doneA, doneB;
     if(runDay){
@@ -1014,7 +1015,7 @@ document.getElementById('mSave').addEventListener('click', async ()=>{
     const ok = await saveEntry(key, day, data);
     if(ok){
       showToast('Gemt ✓'); closeModal(); renderStats(); renderGrid(); renderOverview(); renderDailyMessage();
-      if(!wasAlreadyCompleted && day % 10 === 0) celebrateMilestone(day, USERS[currentUser].name);
+      if(!wasAlreadyCompleted && (day === 6 || day % 10 === 0)) celebrateMilestone(day, USERS[currentUser].name);
     }
     else{ showToast('Kunne ikke gemme – prøv igen'); }
   }
